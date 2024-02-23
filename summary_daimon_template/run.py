@@ -32,7 +32,7 @@ def run(job: InputSchema):
         output_path = Path(job.output_path) / DEFAULT_FILENAME
         output_path.write_text(result['output_text'])
 
-    return result
+    return result['output_text']
 
 
 if __name__ == "__main__":
