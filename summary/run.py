@@ -3,6 +3,7 @@ from langchain_community.llms import Ollama
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.chains.summarize import load_summarize_chain
 from summary.schemas import InputSchema
+from pathlib import Path
 
 def get_logger():
     logger = logging.getLogger(__name__)
@@ -14,7 +15,7 @@ def get_logger():
     return logger
 
 logger = get_logger()
-
+DEFAULT_FILENAME = "summary.txt"
 
 def run(job: InputSchema):
     logger.info(f"Running job with url: {job.url}")
@@ -28,8 +29,8 @@ def run(job: InputSchema):
     logger.info(f"Summary: {result['output_text']}")
 
     if job.output_path is not None:
-        with open(job.output_path, "w") as f:
-            f.write(result["output_text"])
+        output_path = Path(job.output_path) / DEFAULT_FILENAME
+        output_path.write_text(result['output_text'])
 
     return result
 
@@ -38,6 +39,6 @@ if __name__ == "__main__":
     run(
         InputSchema(
             url="https://www.twosigma.com/articles/a-guide-to-large-language-model-abstractions/",
-            output_path="summary.txt"
+            output_path="."
             )
         )
