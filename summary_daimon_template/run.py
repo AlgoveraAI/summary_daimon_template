@@ -2,7 +2,7 @@ import logging
 from langchain_community.llms import Ollama
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.chains.summarize import load_summarize_chain
-from summary.schemas import InputSchema
+from summary_daimon_template.schemas import InputSchema
 from pathlib import Path
 
 def get_logger():

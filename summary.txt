@@ -1,0 +1,9 @@
+ In this article, the authors provide an overview of large language models (LLMs) and evaluate five popular frameworks for building applications with LLMs based on a seven-layer model of abstraction. They discuss the intrinsic features of each framework, such as ease of extension, reliability, performance, portability, and extensibility, as well as their utility/libraries/ecosystems. The authors also introduce terms commonly used in the literature to clarify their meaning.
+
+Key Takeaways:
+
+1. The authors present a seven-layer model of abstraction to evaluate popular LLM frameworks: model abstraction, function level abstraction, prebuilt prompts, prebuilt interaction patterns, community driven prompting/tooling, reliability, performance, portability, and extensibility.
+2. The authors discuss five popular LLM frameworks: dSpy, Langchain, Rasa, Hugging Face Transformers, and Rag. They evaluate each framework's intrinsic features (ease of extension, reliability, performance, portability, and extensibility) and utility/libraries/ecosystem.
+3. The authors introduce terms commonly used in the literature to clarify their meaning, such as prebuilt prompts, prebuilt interaction patterns, community driven prompting/tooling, retries, validation, constraints, model abstraction, function level abstraction, and utilities/libraries/ecosystem.
+
+The authors hope that this article will help researchers and developers understand the landscape of LLM frameworks and make informed decisions when choosing a framework for their project.
