@@ -1,9 +1,21 @@
 import logging
-from langchain_community.llms import Ollama
-from langchain_community.document_loaders import WebBaseLoader
-from langchain.chains.summarize import load_summarize_chain
-from summary_daimon_template.schemas import InputSchema
+import requests
 from pathlib import Path
+from fake_useragent import UserAgent
+from readability import Document
+from markdownify import markdownify as md
+from summary_daimon_template.schemas import InputSchema
+
+OLLAMA_ENDPOINT = 'http://localhost:11434/api/generate'
+DEFAULT_FILENAME = "summary.txt"
+DEFAULT_MODEL = 'mistral'
+
+
+SUMMARIZE_PROMPT = """
+Summarize the following document:
+
+{document}
+"""
 
 def get_logger():
     logger = logging.getLogger(__name__)
@@ -15,30 +27,58 @@ def get_logger():
     return logger
 
 logger = get_logger()
-DEFAULT_FILENAME = "summary.txt"
+
+def scrap_url(url: str):
+    user_agent = UserAgent()
+
+    headers = {
+        'User-Agent': user_agent.random
+    }
+    response = requests.get(url, headers=headers, timeout=15)
+    response.raise_for_status()
+
+    doc = Document(response.text).summary()
+    markdown = md(doc)
+
+    return markdown
 
 def run(job: InputSchema):
-    logger.info(f"Running job with url: {job.url}")
-    loader = WebBaseLoader(job.url)
-    docs = loader.load()
+    try:
+        logger.info(f"Running job with url: {job.url}")
 
-    llm = Ollama(model=job.ollama_model)
-    chain = load_summarize_chain(llm, chain_type="stuff")
+        # get the url
+        markdown = scrap_url(job.url)
+        prompt = SUMMARIZE_PROMPT.format(document=markdown)
 
-    result = chain.invoke(docs)
-    logger.info(f"Summary: {result['output_text']}")
+        data = {
+            'model': job.model or DEFAULT_MODEL,
+            'prompt': prompt,
+            'stream': False
+        }
 
-    if job.output_path is not None:
-        output_path = Path(job.output_path) / DEFAULT_FILENAME
-        output_path.write_text(result['output_text'])
+        response = requests.post(
+            OLLAMA_ENDPOINT,
+            json=data
+        )
+        response.raise_for_status()
+        response_json = response.json()
 
-    return result['output_text']
+        summary = response_json['response']
+
+        logger.info(f"Summary: {summary}")
+
+        if job.output_path is not None:
+            output_path = Path(job.output_path) / DEFAULT_FILENAME
+            output_path.write_text(summary)
+
+        return summary
+    
+    except Exception as e:
+        print(e)
 
 
 if __name__ == "__main__":
     run(
-        InputSchema(
-            url="https://www.twosigma.com/articles/a-guide-to-large-language-model-abstractions/",
-            output_path="."
-            )
+        "https://www.twosigma.com/articles/a-guide-to-large-language-model-abstractions/",
+        output_path="."
         )
