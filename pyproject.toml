@@ -15,6 +15,7 @@ readability-lxml = "^0.8.1"
 markdownify = "^0.11.6"
 requests = "^2.31.0"
 pydantic = "^2.7.0"
+lxml-html-clean = "^0.1.1"
 
 
 [build-system]
