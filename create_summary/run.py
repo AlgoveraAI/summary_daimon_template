@@ -4,7 +4,7 @@ from pathlib import Path
 from fake_useragent import UserAgent
 from readability import Document
 from markdownify import markdownify as md
-from summary_daimon_template.schemas import InputSchema
+from create_summary.schemas import InputSchema
 
 OLLAMA_ENDPOINT = 'http://localhost:11434/api/generate'
 DEFAULT_FILENAME = "summary.txt"

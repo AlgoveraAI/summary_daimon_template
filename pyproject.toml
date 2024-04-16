@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "summary_daimon_template"
+name = "create_summary"
 version = "0.1.0"
 description = ""
 authors = ["moarshy <marshath@gmail.com>"]
 readme = "README.md"
 packages = [
-    { include = "summary_daimon_template", from = "." }
+    { include = "create_summary", from = "." }
 ]
 
 [tool.poetry.dependencies]
