@@ -51,7 +51,7 @@ def run(job: InputSchema):
         prompt = SUMMARIZE_PROMPT.format(document=markdown)
 
         data = {
-            'model': job.model or DEFAULT_MODEL,
+            'model': job.ollama_model or DEFAULT_MODEL,
             'prompt': prompt,
             'stream': False
         }
@@ -78,7 +78,11 @@ def run(job: InputSchema):
 
 
 if __name__ == "__main__":
-    run(
-        "https://www.twosigma.com/articles/a-guide-to-large-language-model-abstractions/",
-        output_path="."
-        )
+    from create_summary.schemas import InputSchema
+    inp = InputSchema(
+        url="https://www.twosigma.com/articles/a-guide-to-large-language-model-abstractions/",
+        output_path=".",
+        ollama_model="mistral:latest"
+    )
+
+    run(inp)
